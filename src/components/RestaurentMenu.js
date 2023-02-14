@@ -2,48 +2,34 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { IMG_CON_URL } from "../config";
 import Shimmer from "./Shimmer";
+import useRestaurant from "../utils/useRestaurant";
 
 const RestaurantMenu = () => {
   const { resId } = useParams();
+  const restaruent = useRestaurant(resId);
 
-  const [restaruentInfo, setRestaruentInfo] = useState(null);
-
-  useEffect(() => {
-    getRestaurantsInfo();
-  }, []);
-
-  async function getRestaurantsInfo() {
-    const data = await fetch(
-      "https://www.swiggy.com/dapi/menu/v4/full?lat=12.9715987&lng=77.5945627&menuId=" +
-        resId
-    );
-
-    const json = await data.json();
-    console.log(json.data);
-    setRestaruentInfo(json.data);
-  }
-  return !restaruentInfo ? (
+  return !restaruent ? (
     <Shimmer />
   ) : (
-    <div className="ResInfo_menu">
-      <div>
+    <div className="ResInfo_menu flex m-5">
+      <div className="bg-pink-50 p-5 rounded-md">
         <h1>Restarunt id: {resId}</h1>
-        <h2>{restaruentInfo?.name}</h2>
-        <img src={IMG_CON_URL + restaruentInfo?.cloudinaryImageId} />
-        <h3>{restaruentInfo?.area}</h3>
-        <h3>{restaruentInfo?.city}</h3>
-        <h3>{restaruentInfo?.avgRating}</h3>
-        <h3>{restaruentInfo?.costForTwoMsg}</h3>
+        <h2 className="text-lg font-bold">{restaruent?.name}</h2>
+        <img src={IMG_CON_URL + restaruent?.cloudinaryImageId} />
+        <h3>Area: {restaruent?.area}</h3>
+        <h3>City: {restaruent?.city}</h3>
+        <h3>Rating: {restaruent?.avgRating}</h3>
+        <h3>Price: {restaruent?.costForTwoMsg}</h3>
       </div>
-      <div>
-        <h1>Menu</h1>
+      <div className="ml-10 bg-pink-50 p-5 rounded-md">
+        <h1 className="text-lg font-bold  ">Menu</h1>
         <ul>
-          {Object.values(restaruentInfo?.menu?.items).map((item) => (
+          {Object.values(restaruent?.menu?.items).map((item) => (
             <li key={item.id}>{item?.name}</li>
           ))}
         </ul>
 
-       {/*  {console.log(Object.values(restaruentInfo.menu?.items))} */}
+        {/*  {console.log(Object.values(restaruentInfo.menu?.items))} */}
       </div>
     </div>
   );
