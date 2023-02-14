@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 /* import { restaurantsList } from "../config"; */
 import RestaurantsCard from "./RestaurantsCard";
 import { useEffect, useState } from "react";
@@ -6,11 +6,13 @@ import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
 import { filterData } from "../utils/helper";
 import useOnline from "../utils/useOnline";
+import UserContext from "../utils/UserContext";
 
 const Body = () => {
   const [allRestaurants, setAllRestarurants] = useState([]);
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const [searchText, setSearchText] = useState("");
+  const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
     getRestaurants();
@@ -45,10 +47,10 @@ const Body = () => {
     <Shimmer />
   ) : (
     <>
-      <div className="search-cointainer bg-pink-50 my-3 p-5">
+      <div className="search-cointainer bg-pink-50 my-3 p-5 text-center">
         <input
           type="text"
-          className="search-input outline-none p-1 px-2 rounded-md"
+          className="search-input outline-none p-1 px-2 rounded-md w-3/6"
           placeholder="search"
           value={searchText}
           onChange={(e) => {
@@ -66,8 +68,28 @@ const Body = () => {
         >
           Search
         </button>
+        {/* 
+        // context API
+        <input
+          value={user.name}
+          onChange={(e) => {
+            setUser({
+              ...user,
+              name: e.target.value,
+            });
+          }}
+        />
+        <input
+          value={user.email}
+          onChange={(e) => {
+            setUser({
+              ...user,
+              email: e.target.value,
+            });
+          }} 
+        />*/}
       </div>
-      <div className="flex flex-wrap">
+      <div className="flex flex-wrap justify-center">
         {/*   {console.log(restaurants)} */}
         {filteredRestaurants.map((restaurant) => {
           return (

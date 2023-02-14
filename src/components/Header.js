@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Logo from "../assets/img/helloFood.png";
 import { Link } from "react-router-dom";
 import useOnline from "../utils/useOnline";
-import Shimmer from "./Shimmer";
+import UserContext from "../utils/UserContext";
 
 export const Title = () => (
   <a href="/">
@@ -26,11 +26,10 @@ const Header = () => {
 
   const isOnline = useOnline();
 
-  useEffect(() => {
-    /* console.log("useeffect"); */
-  }, [isLogedIn]);
+  useEffect(() => {}, [isLogedIn]);
 
-  /* console.log("Render"); */
+  const { user } = useContext(UserContext);
+
   return (
     <div className="flex justify-between bg-pink-100 drop-shadow-md">
       <Title />
@@ -55,6 +54,7 @@ const Header = () => {
       </div>
       <div className="nav-btn-items flex justify-between">
         <h2 className="m-3 p-3 align-middle">
+          <span className="font-bold">{user.name}</span>
           {isOnline ? "You are online" : "You are offline"}
         </h2>
         {/* Login and Logout toggle by click */}
@@ -87,6 +87,7 @@ const Header = () => {
           </button>
         ) : (
           <button
+            className="m-5 p-1 px-2 align-middle text-white rounded-md"
             type="button"
             onClick={() => setLogedIn(false)}
             style={{ background: "red" }}
