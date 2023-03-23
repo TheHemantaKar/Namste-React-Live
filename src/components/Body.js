@@ -7,13 +7,15 @@ import { Link } from "react-router-dom";
 import { filterData } from "../utils/helper";
 import useOnline from "../utils/useOnline";
 import UserContext from "../utils/UserContext";
+import Carousel from "./Carousel";
 
 const Body = () => {
   const [allRestaurants, setAllRestarurants] = useState([]);
   const [filteredRestaurants, setFilteredRestaurants] = useState([]);
   const [searchText, setSearchText] = useState("");
+  const [carouselItem, setCarouselItem] = useState([]);
   const { user, setUser } = useContext(UserContext);
-
+  //console.log(carouselItem);
   useEffect(() => {
     getRestaurants();
   }, []);
@@ -23,10 +25,12 @@ const Body = () => {
       "https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9715987&lng=77.5945627&page_type=DESKTOP_WEB_LISTING"
     );
     const json = await data.json();
-    //console.log(json?.data?.cards[2]?.data?.data?.cards)
+    //console.log(json?.data?.cards[2]?.data?.data?.cards);
     // optional chening using "?"
+
     setAllRestarurants(json?.data?.cards[2]?.data?.data?.cards);
     setFilteredRestaurants(json?.data?.cards[2]?.data?.data?.cards);
+    setCarouselItem(json?.data?.cards[0]?.data?.data?.cards);
   }
 
   const online = useOnline();
@@ -47,18 +51,24 @@ const Body = () => {
     <Shimmer />
   ) : (
     <>
-      <div className="search-cointainer bg-pink-50 my-3 p-5 text-center">
+      <div className="flex bg-[#171a29]  h-auto">
+        <Carousel carouselItem={carouselItem} />
+      </div>
+
+      <div className="search-cointainer bg-gray-100 p-5 text-center">
         <input
           type="text"
-          className="search-input outline-none p-1 px-2 rounded-md w-3/6"
-          placeholder="search"
+          className="search-input outline-none p-1 px-2  w-3/6"
+          placeholder="Looking for great food near you ..."
           value={searchText}
           onChange={(e) => {
+            const data = filterData(searchText, allRestaurants);
             setSearchText(e.target.value);
+            setFilteredRestaurants(data);
           }}
         />
-        <button
-          className="search-btn ml-2 p-1 px-3 bg-purple-800 hover:bg-purple-500 text-white rounded-md"
+        {/* <button
+          className="search-btn p-1 px-3 bg-[#171a29] hover:bg-black text-white "
           onClick={() => {
             //filter data
             const data = filterData(searchText, allRestaurants);
@@ -67,7 +77,7 @@ const Body = () => {
           }}
         >
           Search
-        </button>
+        </button> */}
         {/* 
         // context API
         <input
@@ -89,7 +99,7 @@ const Body = () => {
           }} 
         />*/}
       </div>
-      <div className="flex flex-wrap justify-center">
+      <div className="flex flex-wrap justify-center bg-[#fbfbfb]">
         {/*   {console.log(restaurants)} */}
         {filteredRestaurants.map((restaurant) => {
           return (

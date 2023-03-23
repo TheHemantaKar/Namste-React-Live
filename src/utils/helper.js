@@ -4,3 +4,11 @@ export function filterData(searchText, filteredRestaurants) {
   );
   return filterData;
 }
+
+/* export function filterDish(searchDish, filteredDish) {
+  const filterDish = filteredDish.filter((restaruent) =>
+    restaruent?.menu?.items?.toLowerCase()?.includes(searchDish.toLowerCase())
+  );
+  return filterDish;
+}
+ */
